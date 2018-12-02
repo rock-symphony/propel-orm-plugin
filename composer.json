@@ -1,12 +1,15 @@
 {
-    "name": "propel/sf-propel-o-r-m-plugin",
+    "name": "rock-symphony/propel-orm-plugin",
     "type": "symfony1-plugin",
-    "description": "symfony 1.x plugin for Propel.",
+    "description": "Rock Symphony plugin for Propel.",
     "keywords": ["symfony", "propel", "orm", "active record", "mapping", "database", "persistence"],
     "homepage": "http://www.propelorm.org/",
     "require": {
         "composer/installers": "*",
-        "propel/propel1": "~1.6"
+        "propel/propel1": "~1.6",
+        "rock-symphony/autoloader-contract": "1.5",
+        "rock-symphony/plugin-contract": "1.5",
+        "rock-symphony/yaml-contract": "1.5"
     },
     "extra": {
         "branch-alias": {
