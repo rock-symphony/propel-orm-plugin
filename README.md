@@ -28,9 +28,6 @@ Of course, don't forget to add Composer's autoloader to your ProjectConfiguratio
 
 require __DIR__ .'/../lib/vendor/autoload.php';
 
-require_once dirname(__FILE__) .'/../lib/vendor/symfony/lib/autoload/sfCoreAutoload.class.php';
-sfCoreAutoload::register();
-
 class ProjectConfiguration extends sfProjectConfiguration
 {
     public function setup()

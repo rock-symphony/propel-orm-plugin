@@ -1,8 +1,5 @@
 <?php
 
-require_once SF_DIR. 'lib/autoload/sfCoreAutoload.class.php';
-sfCoreAutoload::register();
-
 class ProjectConfiguration extends sfProjectConfiguration
 {
   public function setup()
