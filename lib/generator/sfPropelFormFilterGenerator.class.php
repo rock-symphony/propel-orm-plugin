@@ -25,9 +25,9 @@ class sfPropelFormFilterGenerator extends sfPropelFormGenerator
    *
    * @param sfGeneratorManager $generatorManager A sfGeneratorManager instance
    */
-  public function initialize(sfGeneratorManager $generatorManager)
+  public function __construct(sfGeneratorManager $generatorManager)
   {
-    parent::initialize($generatorManager);
+    parent::__construct($generatorManager);
 
     $this->setGeneratorClass('sfPropelFormFilter');
   }
@@ -89,8 +89,8 @@ class sfPropelFormFilterGenerator extends sfPropelFormGenerator
       array_pop($packages);
       if (false === $pos = array_search($this->params['model_dir_name'], $packages))
       {
-          $fileName = sfConfig::get('sf_root_dir') . DIRECTORY_SEPARATOR . 
-            str_replace( '.', DIRECTORY_SEPARATOR, $table->getPackage()) . 
+          $fileName = sfConfig::get('sf_root_dir') . DIRECTORY_SEPARATOR .
+            str_replace( '.', DIRECTORY_SEPARATOR, $table->getPackage()) .
               DIRECTORY_SEPARATOR . $table->getClassname() . '.class.php';
           $packages  = explode(DIRECTORY_SEPARATOR, $fileName );
           array_pop($packages);
