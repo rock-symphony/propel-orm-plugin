@@ -9,7 +9,7 @@
  */
 
 $app = 'frontend';
-$fixtures = 'fixtures/fixtures.yml';
+$fixtures = __DIR__ . '/fixtures/data/fixtures/fixtures.php';
 if (!include(dirname(__FILE__).'/../bootstrap/functional.php'))
 {
   return;
@@ -218,8 +218,8 @@ $b->
     check('MoviePropelI18N', array('locale' => 'fr', 'id' => 2, 'title' => 'Les Douze Salopards (1)'))->
     check('MoviePropelI18N', array('locale' => 'en', 'id' => 2, 'title' => 'The Dirty Dozen (1)'))->
   end();
-  
-  
+
+
 
 // https://github.com/propelorm/sfPropelORMPlugin/issues/38
 // SfPropelBehaviorI18n (part of sfPropelORMPlugin)
@@ -230,12 +230,12 @@ $b->
     isParameter('action', 'movie')->
   end()->
   click('submit', array('movie' => array('director' => 'James McTeigue', 'en' => array('title' => 'V For Vendetta'), 'fr' => array('title' => 'V Pour Vendetta'), 'Toy' => array('newToy1' => array('ref' => '04212', 'en' => array('name' => 'V mask'), 'fr' => array('name' => 'masque de V'))))))->
-  
+
   with('response')->begin()->
     isRedirected()->
     followRedirect()->
   end()->
-  
+
   with('response')->begin()->
     checkElement('input[value="James McTeigue"]')->
     checkElement('input[value="V For Vendetta"]')->
@@ -267,12 +267,12 @@ $b->
     isParameter('action', 'moviePropel')->
   end()->
   click('submit', array('movie_propel' => array('director' => 'James McTeigue (1)', 'en' => array('title' => 'V For Vendetta (1)'), 'fr' => array('title' => 'V Pour Vendetta (1)'), 'ToyPropel' => array('newToyPropel1' => array('ref' => '04212', 'en' => array('name' => 'V mask'), 'fr' => array('name' => 'masque de V'))))))->
-  
+
   with('response')->begin()->
     isRedirected()->
     followRedirect()->
   end()->
-  
+
   with('response')->begin()->
     checkElement('input[value="James McTeigue (1)"]')->
     checkElement('input[value="V For Vendetta (1)"]')->
@@ -305,4 +305,3 @@ $b->getAndCheck('i18n', 'products')
   ->end()
 ;
 
-  

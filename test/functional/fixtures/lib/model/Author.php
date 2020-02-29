@@ -9,16 +9,18 @@
  */
 class Author extends BaseAuthor
 {
-	/**
-	 * Initializes internal state of Author object.
-	 * @see        parent::__construct()
-	 */
-	public function __construct()
-	{
-		// Make sure that parent constructor is always invoked, since that
-		// is where any default values for this object are set.
-		parent::__construct();
-	}
+    /**
+     * @param array $fields
+     * @return Author
+     */
+    public static function create(array $fields)
+    {
+        $author = new Author();
+        $author->fromArray($fields, BasePeer::TYPE_FIELDNAME);
+        $author->save();
+
+        return $author;
+    }
 
 	public function __toString()
   {

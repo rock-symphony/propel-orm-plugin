@@ -9,7 +9,7 @@
  */
 
 $app = 'crud';
-$fixtures = 'fixtures/fixtures.yml';
+$fixtures = __DIR__ . '/../fixtures/data/fixtures/fixtures.php';
 if (!include(dirname(__FILE__).'/../../bootstrap/functional.php'))
 {
   return;

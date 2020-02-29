@@ -25,9 +25,9 @@ abstract class sfPropelBaseTask extends sfBaseTask
 
   protected $additionalPhingArgs = array();
 
-  public function initialize(sfEventDispatcher $dispatcher, sfFormatter $formatter)
+  public function __construct(sfEventDispatcher $dispatcher, sfFormatter $formatter)
   {
-    parent::initialize($dispatcher, $formatter);
+    parent::__construct($dispatcher, $formatter);
 
     if (!self::$done)
     {
@@ -154,12 +154,12 @@ abstract class sfPropelBaseTask extends sfBaseTask
       $localprefix = $prefix;
 
       // change prefix for plugins
-      foreach ($this->configuration->getPlugins() as $plugin) 
+      foreach ($this->configuration->getPlugins() as $plugin)
       {
         $plugin_config = $this->configuration->getPluginConfiguration((string) $plugin);
         $plugin_root_dir = rtrim($plugin_config->getRootDir(), '/') . '/';
         // if $schema starts with $plugin_root_dir
-        if (substr($schema, 0, strlen($plugin_root_dir)) === $plugin_root_dir)  
+        if (substr($schema, 0, strlen($plugin_root_dir)) === $plugin_root_dir)
         {
           $localprefix = $prefix . $plugin_config->getName() . '-';
           break;

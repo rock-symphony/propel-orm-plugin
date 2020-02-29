@@ -9,16 +9,18 @@
  */
 class Book extends BaseBook
 {
-	/**
-	 * Initializes internal state of Book object.
-	 * @see        parent::__construct()
-	 */
-	public function __construct()
-	{
-		// Make sure that parent constructor is always invoked, since that
-		// is where any default values for this object are set.
-		parent::__construct();
-	}
+  /**
+   * @param array $fields
+   * @return Book
+   */
+  public static function create($fields)
+  {
+    $book = new Book();
+    $book->fromArray($fields, BasePeer::TYPE_FIELDNAME);
+    $book->save();
+
+    return $book;
+  }
 
   public function __toString()
   {
