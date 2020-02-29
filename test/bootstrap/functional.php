@@ -38,10 +38,6 @@ sf_functional_test_shutdown();
 register_shutdown_function('sf_functional_test_shutdown');
 
 $configuration->initializePropel($app);
-if (isset($fixtures))
-{
-  $configuration->loadFixtures($fixtures);
-}
 
 function sf_functional_test_shutdown_cleanup()
 {
