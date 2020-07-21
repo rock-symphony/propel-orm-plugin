@@ -2,7 +2,7 @@
 
 require_once(dirname(__FILE__).'/../bootstrap/unit.php');
 
-class BaseForm extends sfFormSymfony {}
+class BaseForm extends sfForm {}
 
 class MockMerged extends BaseObject {
   const PEER = 'MockMergedPeer';
