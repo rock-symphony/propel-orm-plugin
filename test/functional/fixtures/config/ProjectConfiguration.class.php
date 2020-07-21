@@ -4,8 +4,8 @@ class ProjectConfiguration extends sfProjectConfiguration
 {
   public function setup(): void
   {
-    $this->enablePlugins(array('sfPropelORMPlugin'));
-    $this->setPluginPath('sfPropelORMPlugin', realpath(dirname(__FILE__) . '/../../../..'));
+    $this->enablePlugins(['propelOrmPlugin']);
+    $this->setPluginPath('propelOrmPlugin', realpath(dirname(__FILE__) . '/../../../..'));
 
     sfConfig::set('sf_propel_path', realpath(dirname(__FILE__) . '/../../../../lib/vendor/propel'));
   }

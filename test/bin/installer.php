@@ -5,10 +5,10 @@
  */
 $fs = new sfFilesystem();
 
-$fs->mkdirs(sfConfig::get('sf_plugins_dir').'/sfPropelORMPlugin');
+$fs->mkdirs(sfConfig::get('sf_plugins_dir').'/propelOrmPlugin');
 
 $root_dir = realpath(sfConfig::get('sf_root_dir').'/../');
-$plugin_dir = realpath(sfConfig::get('sf_plugins_dir').'/sfPropelORMPlugin');
+$plugin_dir = realpath(sfConfig::get('sf_plugins_dir').'/propelOrmPlugin');
 
 $finder = sfFinder::type('any')->ignore_version_control(false)->discard('mockproject')->prune('mockproject');
 $fs->mirror($root_dir, $plugin_dir, $finder);

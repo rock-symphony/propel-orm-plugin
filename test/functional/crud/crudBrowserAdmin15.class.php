@@ -52,7 +52,7 @@ class CrudBrowserAdmin15 extends CrudBrowser
         checkElement('#sf_admin_content table tbody tr td:nth(1) a', '/1/')->
         checkElement('#sf_admin_content table tbody tr td:nth(2)', '/foo title/')->
         checkElement('#sf_admin_content table tbody tr td:nth(3)', '/bar body/')->
-        checkElement('#sf_admin_content table tbody tr td:nth(4) img[src=/sfPropelORMPlugin/images/tick.png]', true)->
+        checkElement('#sf_admin_content table tbody tr td:nth(4) img[src=/propelOrmPlugin/images/tick.png]', true)->
         checkElement('#sf_admin_content table tbody tr td:nth(5)', '/foo excerpt/')->
         checkElement('#sf_admin_content table tbody tr td:nth(6)', '/1/')->
         // admin15 theme uses another date format, so we just check if there is time outputted

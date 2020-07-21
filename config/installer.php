@@ -1,5 +1,5 @@
 <?php
 
-$this->installDir(dirname(__FILE__).'/skeleton');
-$this->enablePlugin('sfPropelORMPlugin');
+$this->installDir(__DIR__.'/skeleton');
+$this->enablePlugin('propelOrmPlugin');
 $this->reloadTasks();

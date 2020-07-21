@@ -13,4 +13,4 @@ env:
 before_script:
     - ./prepare_tests.sh
 
-script: php mockproject/plugins/sfPropelORMPlugin/test/bin/prove.php
+script: php mockproject/plugins/propelOrmPlugin/test/bin/prove.php
