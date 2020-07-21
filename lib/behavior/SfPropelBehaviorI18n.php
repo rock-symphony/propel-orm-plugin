@@ -8,8 +8,6 @@
  * file that was distributed with this source code.
  */
 
-require_once 'generator/lib/util/PropelPHPParser.php';
-
 /**
  * Internationalizes Propel models.
  *

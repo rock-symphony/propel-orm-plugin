@@ -8,8 +8,6 @@
  * file that was distributed with this source code.
  */
 
-require_once 'generator/lib/util/PropelPHPParser.php';
-
 /**
  * A database behavior that adds default symfony behaviors.
  *
@@ -108,21 +106,21 @@ EOF;
       $i18nTablePhpName = $behaviors['i18n']->getI18nTable()->getPhpName();
       $script.= <<<EOF
 
-/** 
- * Returns the current assocciated i18n model name 
- * 
- * @return    string model name 
- */ 
-public static function getI18nModel() 
-{ 
-  return '{$i18nTablePhpName}'; 
-} 
+/**
+ * Returns the current assocciated i18n model name
+ *
+ * @return    string model name
+ */
+public static function getI18nModel()
+{
+  return '{$i18nTablePhpName}';
+}
 
 EOF;
-    }    
+    }
     return $script;
   }
-  
+
   public function objectFilter(&$script, $builder)
   {
     $behaviors = $this->getTable()->getBehaviors();
@@ -139,13 +137,13 @@ EOF;
       $script = preg_replace($pattern, $replacement, $script);
       $pattern = '/protected \$currentLocale = \'.*\';/';
       $replacement = 'protected \$currentLocale = null;';
-      $script = preg_replace($pattern, $replacement, $script);            
+      $script = preg_replace($pattern, $replacement, $script);
       $pattern = '/\(\$locale = \'.*\'/';
       $replacement = '(\$locale';
       $script = preg_replace($pattern, $replacement, $script);
       $getLocale .= <<<EOF
-                
-            
+
+
 /**
  * Gets the locale for translations
  *
@@ -167,8 +165,8 @@ EOF;
       $parser->replaceMethod('getLocale', $getLocale);
       $script = $parser->getCode();
       $setLocale .= <<<EOF
-   
-   
+
+
 /**
  * Sets the locale for translations
  *
@@ -192,9 +190,9 @@ EOF;
       $parser = new PropelPHPParser($script, true);
       $parser->replaceMethod('setLocale', $setLocale);
       //$script = $parser->getCode();
-    }   
+    }
   }
-  
+
   public function queryFilter(&$script, $builder)
   {
     $behaviors = $this->getTable()->getBehaviors();
@@ -208,7 +206,7 @@ $1\$locale=null$2
         \$locale = sfPropel::getDefaultCulture();
     }
 EOF;
-      $script = preg_replace($pattern, $replacement, $script);      
+      $script = preg_replace($pattern, $replacement, $script);
     }
   }
 }

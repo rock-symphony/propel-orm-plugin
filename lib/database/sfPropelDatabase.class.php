@@ -31,12 +31,10 @@ class sfPropelDatabase extends sfPDODatabase
   }
 
   /**
-   * Configures a Propel datasource.
-   *
    * @param array  $parameters The datasource parameters
    * @param string $name       The datasource name
    */
-  public function __construct(array $parameters = [], $name = 'propel')
+  public function __construct(array $parameters = [], string $name = 'propel')
   {
     parent::__construct($parameters);
 
@@ -112,7 +110,7 @@ class sfPropelDatabase extends sfPDODatabase
       // for BC
       $this->setParameter('options', array_merge(
         $this->getParameter('options', array()),
-        array('ATTR_PERSISTENT' => $this->getParameter('persistent'))
+        array('ATTR_PERSISTENT' => ['value' => $this->getParameter('persistent')])
       ));
     }
 

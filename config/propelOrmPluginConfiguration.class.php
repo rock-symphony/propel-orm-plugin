@@ -23,8 +23,6 @@ class propelOrmPluginConfiguration extends sfPluginConfiguration
         );
     }
 
-    require_once 'runtime/lib/Propel.php';
-
     if (!Propel::isInit())
     {
       if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))
