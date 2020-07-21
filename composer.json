@@ -8,7 +8,7 @@
     "require": {
         "php": ">=7.4",
         "composer/installers": "*",
-        "propel/propel1": "~1.6"
+        "rock-symphony/propel-orm": "^2.0"
     },
     "extra": {
         "branch-alias": {
