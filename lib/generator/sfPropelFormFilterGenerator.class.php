@@ -125,7 +125,7 @@ class sfPropelFormFilterGenerator extends sfPropelFormGenerator
    *
    * @return string    The name of a subclass of sfWidgetForm
    */
-  public function getWidgetClassForColumn(ColumnMap $column)
+  public function getWidgetClassForColumn(ColumnMap $column): string
   {
     switch ($column->getType())
     {
@@ -158,7 +158,7 @@ class sfPropelFormFilterGenerator extends sfPropelFormGenerator
    *
    * @return string    The options to pass to the widget as a PHP string
    */
-  public function getWidgetOptionsForColumn(ColumnMap $column)
+  public function getWidgetOptionsForColumn(ColumnMap $column): string
   {
     $options = array();
 
@@ -206,7 +206,7 @@ class sfPropelFormFilterGenerator extends sfPropelFormGenerator
    *
    * @return string    The name of a subclass of sfValidator
    */
-  public function getValidatorClassForColumn(ColumnMap $column)
+  public function getValidatorClassForColumn(ColumnMap $column): string
   {
     switch ($column->getType())
     {
@@ -252,7 +252,7 @@ class sfPropelFormFilterGenerator extends sfPropelFormGenerator
    *
    * @return string    The options to pass to the validator as a PHP string
    */
-  public function getValidatorOptionsForColumn(ColumnMap $column)
+  public function getValidatorOptionsForColumn(ColumnMap $column): string
   {
     $options = array('\'required\' => false');
 
@@ -287,7 +287,7 @@ class sfPropelFormFilterGenerator extends sfPropelFormGenerator
     return count($options) ? sprintf('array(%s)', implode(', ', $options)) : '';
   }
 
-  public function getValidatorForColumn($column)
+  public function getValidatorForColumn(ColumnMap $column): string
   {
     $format = 'new %s(%s)';
     if (in_array($class = $this->getValidatorClassForColumn($column), array('sfValidatorInteger', 'sfValidatorNumber')))
@@ -298,7 +298,7 @@ class sfPropelFormFilterGenerator extends sfPropelFormGenerator
     return sprintf($format, $class, $this->getValidatorOptionsForColumn($column));
   }
 
-  public function getType(ColumnMap $column)
+  public function getType(ColumnMap $column): string
   {
     if ($column->isForeignKey())
     {

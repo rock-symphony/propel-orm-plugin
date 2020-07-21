@@ -76,8 +76,6 @@ EOF;
       unlink($buildTimeFile);
     }
 
-    $this->reloadAutoload();
-
     return !$ret;
   }
 }

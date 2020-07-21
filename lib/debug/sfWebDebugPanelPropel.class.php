@@ -25,12 +25,14 @@ class sfWebDebugPanelPropel extends sfWebDebugPanel
    *
    * @return string $html
    */
-  public function getTitle()
+  public function getTitle(): string
   {
     if ($sqlLogs = $this->getSqlLogs())
     {
       return '<img src="'.$this->webDebug->getOption('image_root_path').'/database.png" alt="SQL queries" /> '.count($sqlLogs);
     }
+
+    return '';
   }
 
   /**
@@ -38,7 +40,7 @@ class sfWebDebugPanelPropel extends sfWebDebugPanel
    *
    * @return string $title
    */
-  public function getPanelTitle()
+  public function getPanelTitle(): string
   {
     return 'SQL queries';
   }
@@ -48,7 +50,7 @@ class sfWebDebugPanelPropel extends sfWebDebugPanel
    *
    * @return string $html
    */
-  public function getPanelContent()
+  public function getPanelContent(): string
   {
     return '
       <div id="sfWebDebugDatabaseLogs">
@@ -97,7 +99,7 @@ class sfWebDebugPanelPropel extends sfWebDebugPanel
   /**
    * Listens to debug.web.load_panels and adds this panel.
    */
-  static public function listenToAddPanelEvent(sfEvent $event)
+  static public function listenToAddPanelEvent(sfEvent $event): void
   {
     $event->getSubject()->setPanel('db', new self($event->getSubject()));
   }
@@ -107,7 +109,7 @@ class sfWebDebugPanelPropel extends sfWebDebugPanel
    *
    * @return array
    */
-  protected function getSqlLogs()
+  protected function getSqlLogs(): array
   {
     $config    = $this->getPropelConfiguration();
     $outerGlue = $config->getParameter('debugpdo.logging.outerglue', ' | ');
@@ -203,7 +205,7 @@ class sfWebDebugPanelPropel extends sfWebDebugPanel
    *
    * @return PropelConfiguration
    */
-  protected function getPropelConfiguration()
+  protected function getPropelConfiguration(): PropelConfiguration
   {
     return Propel::getConfiguration(PropelConfiguration::TYPE_OBJECT);
   }

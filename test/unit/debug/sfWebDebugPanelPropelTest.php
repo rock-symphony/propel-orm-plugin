@@ -14,7 +14,7 @@ $t = new lime_test(5);
 
 class sfWebDebugPanelPropelTest extends sfWebDebugPanelPropel
 {
-  protected function getPropelConfiguration()
+  protected function getPropelConfiguration(): PropelConfiguration
   {
     $config = new PropelConfiguration(array());
     $config->setParameter('debugpdo.logging.details.slow.enabled', true);
@@ -25,7 +25,7 @@ class sfWebDebugPanelPropelTest extends sfWebDebugPanelPropel
 
 class sfWebDebugPanelPropelTestDifferentGlue extends sfWebDebugPanelPropel
 {
-  protected function getPropelConfiguration()
+  protected function getPropelConfiguration(): PropelConfiguration
   {
     $config = new PropelConfiguration(array());
     $config->setParameter('debugpdo.logging.outerglue', 'xx');

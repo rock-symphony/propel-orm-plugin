@@ -20,8 +20,9 @@
  */
 class sfPropelFormGenerator extends sfGenerator
 {
-  protected
-    $dbMap = null;
+  protected ?DatabaseMap $dbMap = null;
+  protected ?TableMap $table = null;
+  protected array $params = [];
 
   /**
    * Initializes the current sfGenerator instance.
@@ -127,9 +128,9 @@ class sfPropelFormGenerator extends sfGenerator
    *
    * A table is considered to be a m2m table if it has 2 foreign keys that are also primary keys.
    *
-   * @return array An array of tables.
+   * @return array[] An array of tables.
    */
-  public function getManyToManyTables()
+  public function getManyToManyTables(): array
   {
     $tables = array();
     $middleTables = array();
@@ -221,13 +222,13 @@ class sfPropelFormGenerator extends sfGenerator
    *
    * This method does not returns foreign keys that are also primary keys.
    *
-   * @return array An array composed of:
+   * @return array[] An array composed of:
    *                 * The foreign table PHP name
    *                 * The foreign key PHP name
    *                 * A Boolean to indicate whether the column is required or not
    *                 * A Boolean to indicate whether the column is a many to many relationship or not
    */
-  public function getForeignKeyNames()
+  public function getForeignKeyNames(): array
   {
     $names = array();
     foreach ($this->table->getColumns() as $column)
@@ -251,7 +252,7 @@ class sfPropelFormGenerator extends sfGenerator
    *
    * @return ColumnMap A ColumnMap object
    */
-  public function getPrimaryKey()
+  public function getPrimaryKey(): ?ColumnMap
   {
     foreach ($this->table->getColumns() as $column)
     {
@@ -260,6 +261,8 @@ class sfPropelFormGenerator extends sfGenerator
         return $column;
       }
     }
+
+    return null;
   }
 
   /**
@@ -269,7 +272,7 @@ class sfPropelFormGenerator extends sfGenerator
    *
    * @return TableMap  A TableMap object
    */
-  public function getForeignTable(ColumnMap $column)
+  public function getForeignTable(ColumnMap $column): TableMap
   {
     return $this->dbMap->getTable($column->getRelatedTableName());
   }
@@ -281,7 +284,7 @@ class sfPropelFormGenerator extends sfGenerator
    *
    * @return string    The name of a subclass of sfWidgetForm
    */
-  public function getWidgetClassForColumn(ColumnMap $column)
+  public function getWidgetClassForColumn(ColumnMap $column): string
   {
     switch ($column->getType())
     {
@@ -329,7 +332,7 @@ class sfPropelFormGenerator extends sfGenerator
    *
    * @return string    The options to pass to the widget as a PHP string
    */
-  public function getWidgetOptionsForColumn(ColumnMap $column)
+  public function getWidgetOptionsForColumn(ColumnMap $column): string
   {
     $options = array();
 
@@ -362,7 +365,7 @@ class sfPropelFormGenerator extends sfGenerator
    *
    * @return string    The name of a subclass of sfValidator
    */
-  public function getValidatorClassForColumn(ColumnMap $column)
+  public function getValidatorClassForColumn(ColumnMap $column): string
   {
     switch ($column->getType())
     {
@@ -424,7 +427,7 @@ class sfPropelFormGenerator extends sfGenerator
    *
    * @return string    The options to pass to the validator as a PHP string
    */
-  public function getValidatorOptionsForColumn(ColumnMap $column)
+  public function getValidatorOptionsForColumn(ColumnMap $column): string
   {
     $options = array();
 
@@ -483,9 +486,9 @@ class sfPropelFormGenerator extends sfGenerator
   /**
    * Returns the maximum length for a column name.
    *
-   * @return integer The length of the longer column name
+   * @return int The length of the longer column name
    */
-  public function getColumnNameMaxLength()
+  public function getColumnNameMaxLength(): int
   {
     $max = 0;
     foreach ($this->table->getColumns() as $column)
@@ -510,9 +513,9 @@ class sfPropelFormGenerator extends sfGenerator
   /**
    * Returns an array of primary key column names.
    *
-   * @return array An array of primary key column names
+   * @return string[] An array of primary key column names
    */
-  public function getPrimaryKeyColumNames()
+  public function getPrimaryKeyColumNames(): array
   {
     $pks = array();
     foreach ($this->table->getColumns() as $column)
@@ -533,7 +536,7 @@ class sfPropelFormGenerator extends sfGenerator
    *
    * @see getPrimaryKeyColumNames()
    */
-  public function getPrimaryKeyColumNamesAsString()
+  public function getPrimaryKeyColumNamesAsString(): string
   {
     return sprintf('array(\'%s\')', implode('\', \'', $this->getPrimaryKeyColumNames()));
   }
@@ -541,9 +544,9 @@ class sfPropelFormGenerator extends sfGenerator
   /**
    * Returns true if the current table is internationalized.
    *
-   * @return Boolean true if the current table is internationalized, false otherwise
+   * @return bool true if the current table is internationalized, false otherwise
    */
-  public function isI18n()
+  public function isI18n(): bool
   {
     return method_exists(constant($this->table->getClassname().'::PEER'), 'getI18nModel');
   }
@@ -553,19 +556,19 @@ class sfPropelFormGenerator extends sfGenerator
    *
    * @return string The model class name
    */
-  public function getI18nModel()
+  public function getI18nModel(): string
   {
     return call_user_func(array(constant($this->table->getClassname().'::PEER'), 'getI18nModel'));
   }
 
-  public function underscore($name)
+  public function underscore(string $name): string
   {
     return strtolower(preg_replace(array('/([A-Z]+)([A-Z][a-z])/', '/([a-z\d])([A-Z])/'), '\\1_\\2', $name));
   }
 
-  public function getUniqueColumnNames()
+  public function getUniqueColumnNames(): array
   {
-    $uniqueColumns = array();
+    $uniqueColumns = [];
 
     foreach (call_user_func(array(constant($this->table->getClassname().'::PEER'), 'getUniqueColumnNames')) as $unique)
     {
@@ -581,7 +584,7 @@ class sfPropelFormGenerator extends sfGenerator
     return $uniqueColumns;
   }
 
-  public function translateColumnName($column, $related = false, $to = BasePeer::TYPE_FIELDNAME)
+  public function translateColumnName(ColumnMap $column, bool $related = false, string $to = BasePeer::TYPE_FIELDNAME): string
   {
     $peer = $related ? constant($column->getTable()->getDatabaseMap()->getTable($column->getRelatedTableName())->getPhpName().'::PEER') : constant($column->getTable()->getPhpName().'::PEER');
     $field = $related ? $column->getRelatedName() : $column->getFullyQualifiedName();
@@ -592,7 +595,7 @@ class sfPropelFormGenerator extends sfGenerator
   /**
    * Loads all Propel builders.
    */
-  protected function loadBuilders()
+  protected function loadBuilders(): void
   {
     $this->dbMap = Propel::getDatabaseMap($this->params['connection']);
     $classes = sfFinder::type('file')->name('*TableMap.php')->in($this->generatorManager->getConfiguration()->getModelDirs());
