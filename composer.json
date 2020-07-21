@@ -2,6 +2,7 @@
     "name": "rock-symphony/propel-orm-plugin",
     "type": "symfony1-plugin",
     "description": "Rock Symphony plugin for Propel.",
+    "license": "MIT",
     "keywords": ["symfony", "propel", "orm", "active record", "mapping", "database", "persistence"],
     "homepage": "http://www.propelorm.org/",
     "require": {
