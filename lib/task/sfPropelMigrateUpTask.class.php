@@ -18,6 +18,9 @@
  */
 class sfPropelMigrateUpTask extends sfPropelBaseTask
 {
+  private const OK = 0;
+  private const NOT_OK = 1;
+
   /**
    * @see sfTask
    */
@@ -60,7 +63,7 @@ EOF;
     if (!$nextMigrationTimestamp = $manager->getFirstUpMigrationTimestamp())
     {
       $this->logSection('propel', 'All migrations were already executed - nothing to migrate.');
-      return true;
+      return self::OK;
     }
     $this->logSection('propel', sprintf(
       'Executing migration %s up',
@@ -71,7 +74,7 @@ EOF;
     if (false === $migration->preUp($manager))
     {
       $this->logSection('propel', 'preUp() returned false. Aborting migration.', null, 'ERROR');
-      return false;
+      return self::NOT_OK;
     }
 
     foreach ($migration->getUpSQL() as $datasource => $sql)
@@ -99,7 +102,7 @@ EOF;
         catch (PDOException $e)
         {
           $this->logSection(sprintf('Failed to execute SQL "%s". Aborting migration.', $statement), null, 'ERROR');
-          return false;
+          return self::NOT_OK;
           // continue
         }
       }
@@ -111,7 +114,7 @@ EOF;
           $manager->getMigrationDir() . DIRECTORY_SEPARATOR . $manager->getMigrationClassName($nextMigrationTimestamp)
         ));
         $this->logSection('propel', 'Migration aborted', null, 'ERROR');
-        return false;
+        return self::NOT_OK;
       }
       $this->logSection('propel', sprintf(
         '%d of %d SQL statements executed successfully on datasource "%s"',
@@ -140,7 +143,7 @@ EOF;
       $this->logSection('propel', 'Migration complete. No further migration to execute.');
     }
 
-    return true;
+    return self::OK;
   }
 
 }

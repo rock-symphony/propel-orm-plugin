@@ -18,6 +18,9 @@
  */
 class sfPropelMigrateDownTask extends sfPropelBaseTask
 {
+  private const OK = 0;
+  private const NOT_OK = 1;
+
   /**
    * @see sfTask
    */
@@ -61,7 +64,7 @@ EOF;
     if (!$nextMigrationTimestamp = array_pop($previousTimestamps))
     {
       $this->logSection('propel', 'No migration were ever executed on this database - nothing to reverse.');
-      return true;
+      return self::OK;
     }
     $this->logSection('propel', sprintf(
       'Executing migration %s down',
@@ -81,7 +84,7 @@ EOF;
     if (false === $migration->preDown($manager))
     {
       $this->logSection('propel', 'preDown() returned false. Aborting migration.', null, 'ERROR');
-      return false;
+      return self::NOT_OK;
     }
 
     foreach ($migration->getDownSQL() as $datasource => $sql)
@@ -109,7 +112,7 @@ EOF;
         catch (PDOException $e)
         {
           $this->logSection(sprintf('Failed to execute SQL "%s". Aborting migration.', $statement), null, 'ERROR');
-          return false;
+          return self::NOT_OK;
           // continue
         }
       }
@@ -121,7 +124,7 @@ EOF;
           $manager->getMigrationDir() . DIRECTORY_SEPARATOR . $manager->getMigrationClassName($nextMigrationTimestamp)
         ));
         $this->logSection('propel', 'Migration aborted', null, 'ERROR');
-        return false;
+        return self::NOT_OK;
       }
       $this->logSection('propel', sprintf(
         '%d of %d SQL statements executed successfully on datasource "%s"',
@@ -148,7 +151,7 @@ EOF;
       $this->logSection('propel', 'Reverse migration complete. No more migration available for reverse');
     }
 
-    return true;
+    return self::OK;
   }
 
 }
