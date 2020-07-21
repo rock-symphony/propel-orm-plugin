@@ -19,18 +19,17 @@
  */
 class sfPropelPager extends sfPager
 {
-  protected
-    $criteria               = null,
-    $con                    = null,
-    $peer_method_name       = 'doSelect',
-    $peer_count_method_name = 'doCount';
+  protected ?Criteria $criteria = null;
+  protected $con = null;
+  protected string $peer_method_name       = 'doSelect';
+  protected string $peer_count_method_name = 'doCount';
 
   /**
-   * Constructor.
-   *
+   * @param string $class
+   * @param int $maxPerPage
    * @see sfPager
    */
-  public function __construct($class, $maxPerPage = 10)
+  public function __construct(string $class, int $maxPerPage = 10)
   {
     parent::__construct($class, $maxPerPage);
 
@@ -38,10 +37,7 @@ class sfPropelPager extends sfPager
     $this->tableName = constant($this->getClassPeer().'::TABLE_NAME');
   }
 
-  /**
-   * @see sfPager
-   */
-  public function init($con = null)
+  public function init($con = null): void
   {
     $this->con = $con;
     $this->results = null;
@@ -95,10 +91,7 @@ class sfPropelPager extends sfPager
     }
   }
 
-  /**
-   * @see sfPager
-   */
-  protected function retrieveObject($offset)
+  protected function retrieveObject(int $offset)
   {
     $criteriaForRetrieve = clone $this->getCriteria();
     $criteriaForRetrieve
@@ -111,10 +104,7 @@ class sfPropelPager extends sfPager
     return is_array($results) && isset($results[0]) ? $results[0] : null;
   }
 
-  /**
-   * @see sfPager
-   */
-  public function getResults()
+  public function getResults(): array
   {
     return call_user_func(array($this->getClassPeer(), $this->getPeerMethod()), $this->getCriteria(), $this->con);
   }
@@ -124,7 +114,7 @@ class sfPropelPager extends sfPager
    *
    * @return string
    */
-  public function getPeerMethod()
+  public function getPeerMethod(): string
   {
     return $this->peer_method_name;
   }
@@ -134,9 +124,9 @@ class sfPropelPager extends sfPager
    *
    * @param string $method A method on the current peer class
    */
-  public function setPeerMethod($peer_method_name)
+  public function setPeerMethod(string $method): void
   {
-    $this->peer_method_name = $peer_method_name;
+    $this->peer_method_name = $method;
   }
 
   /**
@@ -144,7 +134,7 @@ class sfPropelPager extends sfPager
    *
    * @return string
    */
-  public function getPeerCountMethod()
+  public function getPeerCountMethod(): string
   {
     return $this->peer_count_method_name;
   }
@@ -154,7 +144,7 @@ class sfPropelPager extends sfPager
    *
    * @param string $peer_count_method_name
    */
-  public function setPeerCountMethod($peer_count_method_name)
+  public function setPeerCountMethod(string $peer_count_method_name): void
   {
     $this->peer_count_method_name = $peer_count_method_name;
   }
@@ -164,7 +154,7 @@ class sfPropelPager extends sfPager
    *
    * @return string
    */
-  public function getClassPeer()
+  public function getClassPeer(): string
   {
     return constant($this->class.'::PEER');
   }
@@ -174,7 +164,7 @@ class sfPropelPager extends sfPager
    *
    * @return Criteria
    */
-  public function getCriteria()
+  public function getCriteria(): Criteria
   {
     return $this->criteria;
   }
@@ -184,7 +174,7 @@ class sfPropelPager extends sfPager
    *
    * @param Criteria $criteria
    */
-  public function setCriteria($criteria)
+  public function setCriteria(Criteria $criteria): void
   {
     $this->criteria = $criteria;
   }
