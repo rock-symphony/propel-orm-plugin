@@ -8,13 +8,6 @@
  * file that was distributed with this source code.
  */
 
-require_once(dirname(__FILE__).'/sfPropelBaseTask.class.php');
-require_once('generator/lib/model/AppData.php');
-require_once('generator/lib/builder/util/XmlToAppData.php');
-require_once('generator/lib/platform/DefaultPlatform.php');
-require_once('generator/lib/model/diff/PropelDatabaseComparator.php');
-require_once('generator/lib/util/PropelMigrationManager.php');
-
 /**
  * Create classes for the current model.
  *
