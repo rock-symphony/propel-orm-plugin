@@ -146,7 +146,5 @@ EOF;
         return $ret;
       }
     }
-
-    $this->reloadAutoload();
   }
 }

@@ -100,7 +100,5 @@ EOF;
       $this->getFilesystem()->copy(sfConfig::get('sf_symfony_lib_dir').'/task/generator/skeleton/project/lib/form/BaseForm.class.php', $file);
       $this->getFilesystem()->replaceTokens($file, '##', '##', $constants);
     }
-
-    $this->reloadAutoload();
   }
 }
