@@ -8,8 +8,7 @@
     "require": {
         "php": ">=7.4",
         "composer/installers": "*",
-        "propel/propel1": "~1.6",
-        "rock-symphony/autoloader-contract": "2.0"
+        "propel/propel1": "~1.6"
     },
     "extra": {
         "branch-alias": {
