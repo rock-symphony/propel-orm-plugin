@@ -294,8 +294,6 @@ abstract class sfPropelBaseTask extends sfBaseTask
     // filter arguments through the event dispatcher
     $args = $this->dispatcher->filter(new sfEvent($this, 'propel.filter_phing_args'), $args)->getReturnValue();
 
-    require_once dirname(__FILE__).'/sfPhing.class.php';
-
     // enable output buffering
     Phing::setOutputStream(new OutputStream(fopen('php://output', 'w')));
     Phing::startup();
@@ -498,10 +496,6 @@ abstract class sfPropelBaseTask extends sfBaseTask
       }
     }
 
-    sfToolkit::addIncludePath(array(
-      sfConfig::get('sf_propel_generator_path', realpath(dirname(__FILE__).'/../vendor/propel/generator/lib')),
-    ));
-    require_once 'config/GeneratorConfig.php';
     return new GeneratorConfig($params);
   }
 
