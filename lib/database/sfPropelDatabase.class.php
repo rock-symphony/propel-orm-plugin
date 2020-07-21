@@ -36,7 +36,7 @@ class sfPropelDatabase extends sfPDODatabase
    * @param array  $parameters The datasource parameters
    * @param string $name       The datasource name
    */
-  public function initialize($parameters = null, $name = 'propel')
+  public function initialize(array $parameters = [], string $name = 'propel'): void
   {
     parent::initialize($parameters);
 
@@ -75,7 +75,7 @@ class sfPropelDatabase extends sfPDODatabase
    *
    * @return void
    */
-  public function connect()
+  public function connect(): void
   {
     $this->connection = Propel::getConnection($this->getParameter('datasource'));
   }
@@ -208,7 +208,7 @@ class sfPropelDatabase extends sfPDODatabase
    *
    * @return void
    */
-  public function shutdown()
+  public function shutdown(): void
   {
     if (null !== $this->connection)
     {
