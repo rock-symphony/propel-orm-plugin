@@ -22,23 +22,11 @@ class sfPropelORMPluginConfiguration extends sfPluginConfiguration
       sfConfig::set('sf_admin_module_web_dir', '/sfPropelORMPlugin');
     }
 
-    if (false === sfConfig::get('sf_phing_path', false))
-    {
-      sfConfig::set('sf_phing_path', realpath(dirname(__FILE__).'/../lib/vendor/phing'));
+    if (! sfConfig::get('sf_propel_path', false)) {
+        throw new InvalidArgumentException(
+            'Please configure `sf_propel_path` to point to the Propel vendor directory.'
+        );
     }
-
-    if (false === sfConfig::get('sf_propel_path', false))
-    {
-      sfConfig::set('sf_propel_path', realpath(dirname(__FILE__).'/../lib/vendor/propel'));
-    }
-
-    sfToolkit::addIncludePath(array(
-      sfConfig::get('sf_root_dir'),
-      sfConfig::get('sf_phing_path'),
-      sfConfig::get('sf_propel_path'),
-      sfConfig::get('sf_phing_path').'/../',
-      sfConfig::get('sf_phing_path').'/classes',
-    ));
 
     require_once 'runtime/lib/Propel.php';
 
