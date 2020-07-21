@@ -250,12 +250,6 @@ abstract class sfPropelBaseTask extends sfBaseTask
       throw new sfCommandException('You must create a schema.yml or schema.xml file.');
     }
 
-    // Call phing targets
-    sfToolkit::addIncludePath(array(
-      sfConfig::get('sf_symfony_lib_dir'),
-      sfConfig::get('sf_propel_generator_path', sfConfig::get('sf_propel_path').'/generator/lib'),
-    ));
-
     $args = array();
     $bufferPhingOutput = null === $this->commandApplication || !$this->commandApplication->withTrace();
 
@@ -410,7 +404,7 @@ abstract class sfPropelBaseTask extends sfBaseTask
   {
     $params = $this->getConnection($databaseManager, $connection);
     $platformClass = ucfirst($params['adapter']) . 'Platform';
-    include_once sfConfig::get('sf_propel_path') . '/generator/lib/platform/' . $platformClass . '.php';
+    /** @var PropelPlatformInterface $platform */
     $platform = new $platformClass();
     $platform->setGeneratorConfig($this->getGeneratorConfig());
     return $platform;
@@ -420,7 +414,7 @@ abstract class sfPropelBaseTask extends sfBaseTask
   {
     $params = $this->getConnection($databaseManager, $connection);
     $parserClass = ucfirst($params['adapter']) . 'SchemaParser';
-    include_once sfConfig::get('sf_propel_path') . '/generator/lib/reverse/' . $params['adapter'] . '/' . $parserClass . '.php';
+    /** @var SchemaParser $parser */
     $parser = new $parserClass();
     $parser->setConnection($con);
     $parser->setGeneratorConfig($this->getGeneratorConfig());

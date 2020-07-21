@@ -32,14 +32,12 @@ class ProjectConfiguration extends sfProjectConfiguration
 {
     public function setup()
     {
-        $this->enablePlugins(array(
+        $this->enablePlugins([
             'sfPropelORMPlugin',
             ...
-        ));
+        ]);
 
-        // mandatory because of the Composer vendor directory naming scheme
-        sfConfig::set('sf_phing_path', sfConfig::get('sf_lib_dir') .'/vendor/phing/phing');
-        sfConfig::set('sf_propel_path', sfConfig::get('sf_lib_dir') .'/vendor/propel/propel1');
+        sfConfig::set('sf_propel_path', __DIR__ .'/../vendor/propel/propel1');
     }
 }
 ```
@@ -83,12 +81,7 @@ class ProjectConfiguration extends sfProjectConfiguration
 {
   public function setup()
   {
-    //setup the location for our phing and propel libs
-    sfConfig::set('sf_phing_path', sfConfig::get('sf_root_dir').'/plugins/sfPropelORMPlugin/lib/vendor/phing/');
-    sfConfig::set('sf_propel_path', sfConfig::get('sf_root_dir').'/plugins/sfPropelORMPlugin/lib/vendor/propel/');
-    sfConfig::set('sf_propel_generator_path', sfConfig::get('sf_root_dir').'/plugins/sfPropelORMPlugin/lib/vendor/propel/generator/lib/');
-
-    $this->enablePlugins('sfPropelORMPlugin');
+    $this->enablePlugins(['sfPropelORMPlugin']);
   }
 }
 ```
@@ -102,16 +95,8 @@ class ProjectConfiguration extends sfProjectConfiguration
 {
   public function setup()
   {
-    $this->enablePlugins(array('sfPropelORMPlugin'));
+    $this->enablePlugins(['sfPropelORMPlugin']);
     $this->setPluginPath('sfPropelORMPlugin', realpath(dirname(__FILE__) . '/../../../..'));
-
-    // SVN way
-    //sfConfig::set('sf_propel_path', SF_DIR.'/../lib/vendor/propel');
-    //sfConfig::set('sf_phing_path', SF_DIR.'/../lib/vendor/phing');
-
-    // Git way
-    sfConfig::set('sf_propel_path', realpath(dirname(__FILE__) . '/../../../../lib/vendor/propel'));
-    sfConfig::set('sf_phing_path', realpath(dirname(__FILE__) . '/../../../../lib/vendor/phing'));
   }
 ```
 
