@@ -78,7 +78,7 @@
     </foreign-key>
   </table>
 
-  <!-- model and data for testing SfPropelBehaviorI18n (part of sfPropelORMPlugin - symfony_i18n - historical integration ) -->
+  <!-- model and data for testing SfPropelBehaviorI18n (part of propelOrmPlugin - symfony_i18n - historical integration ) -->
   <table name="movie" isI18N="true" i18nTable="movie_i18n">
     <column name="id" type="integer" required="true" primaryKey="true" autoincrement="true" />
     <column name="director" type="varchar" size="255" />
@@ -95,7 +95,7 @@
      <unique-column name="title" />
     </unique>
   </table>
-  <!-- model and data for testing SfPropelBehaviorI18n (part of sfPropelORMPlugin - symfony_i18n - historical integration ) -->
+  <!-- model and data for testing SfPropelBehaviorI18n (part of propelOrmPlugin - symfony_i18n - historical integration ) -->
   <table name="toy" isI18N="true" i18nTable="toy_i18n">
     <column name="id" type="integer" required="true" primaryKey="true" autoincrement="true" />
     <column name="ref" type="varchar" size="255" />

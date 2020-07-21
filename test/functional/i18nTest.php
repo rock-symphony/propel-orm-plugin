@@ -79,7 +79,7 @@ $b->
   end()
 ;
 
-// SfPropelBehaviorI18n (part of sfPropelORMPlugin)
+// SfPropelBehaviorI18n (part of propelOrmPlugin)
 $b->
   get('/i18n/movie')->
   with('request')->begin()->
@@ -222,7 +222,7 @@ $b->
 
 
 // https://github.com/propelorm/sfPropelORMPlugin/issues/38
-// SfPropelBehaviorI18n (part of sfPropelORMPlugin)
+// SfPropelBehaviorI18n (part of // https://github.com/propelorm/propelOrmPlugin/issues/38)
 $b->
   get('/i18n/movie')->
   with('request')->begin()->

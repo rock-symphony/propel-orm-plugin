@@ -1,6 +1,6 @@
 autoload:
-  sfPropelORMPlugin_lib:
+  propelOrmPlugin_lib:
     name:           'propel addon'
-    path:           '%sf_plugins_dir%/sfPropelORMPlugin/lib'
+    path:           '%sf_plugins_dir%/propelOrmPlugin/lib'
     recursive:      true
     exclude:        [vendor]

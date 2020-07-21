@@ -26,11 +26,11 @@ class PropelInstallTask extends sfBaseTask
     preg_replace('#^propel.behavior#', ';\1', $content);
     $content .= <<<EOF
     propel.behavior.default                        = symfony,symfony_i18n
-    propel.behavior.symfony.class                  = plugins.sfPropelORMPlugin.lib.behavior.SfPropelBehaviorSymfony
-    propel.behavior.symfony_i18n.class             = plugins.sfPropelORMPlugin.lib.behavior.SfPropelBehaviorI18n
-    propel.behavior.symfony_i18n_translation.class = plugins.sfPropelORMPlugin.lib.behavior.SfPropelBehaviorI18nTranslation
-    propel.behavior.symfony_behaviors.class        = plugins.sfPropelORMPlugin.lib.behavior.SfPropelBehaviorSymfonyBehaviors
-    propel.behavior.symfony_timestampable.class    = plugins.sfPropelORMPlugin.lib.behavior.SfPropelBehaviorTimestampable
+    propel.behavior.symfony.class                  = plugins.propelOrmPlugin.lib.behavior.SfPropelBehaviorSymfony
+    propel.behavior.symfony_i18n.class             = plugins.propelOrmPlugin.lib.behavior.SfPropelBehaviorI18n
+    propel.behavior.symfony_i18n_translation.class = plugins.propelOrmPlugin.lib.behavior.SfPropelBehaviorI18nTranslation
+    propel.behavior.symfony_behaviors.class        = plugins.propelOrmPlugin.lib.behavior.SfPropelBehaviorSymfonyBehaviors
+    propel.behavior.symfony_timestampable.class    = plugins.propelOrmPlugin.lib.behavior.SfPropelBehaviorTimestampable
 EOF;
 
     file_put_contents($ini_file, $content);

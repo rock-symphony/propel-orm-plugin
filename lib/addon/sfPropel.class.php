@@ -97,6 +97,6 @@ class sfPropel
    */
   static public function clearAllInstancePools()
   {
-    sfProjectConfiguration::getActive()->getPluginConfiguration('sfPropelORMPlugin')->clearAllInstancePools();
+    sfProjectConfiguration::getActive()->getPluginConfiguration('propelOrmPlugin')->clearAllInstancePools();
   }
 }
