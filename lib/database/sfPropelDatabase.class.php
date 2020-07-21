@@ -31,14 +31,12 @@ class sfPropelDatabase extends sfPDODatabase
   }
 
   /**
-   * Configures a Propel datasource.
-   *
    * @param array  $parameters The datasource parameters
    * @param string $name       The datasource name
    */
-  public function initialize(array $parameters = [], string $name = 'propel'): void
+  public function __construct(array $parameters = [], string $name = 'propel')
   {
-    parent::initialize($parameters);
+    parent::__construct($parameters);
 
     if (!$this->hasParameter('datasource') && $this->hasParameter('name'))
     {
