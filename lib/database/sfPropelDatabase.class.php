@@ -112,7 +112,7 @@ class sfPropelDatabase extends sfPDODatabase
       // for BC
       $this->setParameter('options', array_merge(
         $this->getParameter('options', array()),
-        array('ATTR_PERSISTENT' => $this->getParameter('persistent'))
+        array('ATTR_PERSISTENT' => ['value' => $this->getParameter('persistent')])
       ));
     }
 
