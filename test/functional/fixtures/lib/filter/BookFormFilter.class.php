@@ -10,7 +10,7 @@
  */
 class BookFormFilter extends BaseBookFormFilter
 {
-  public function configure()
+  public function configure(): void
   {
   }
 }

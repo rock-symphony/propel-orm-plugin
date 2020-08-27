@@ -9,7 +9,7 @@
  */
 class <?php echo $this->table->getClassname() ?>FormFilter extends Base<?php echo $this->table->getClassname() ?>FormFilter
 {
-  public function configure()
+  public function configure(): void
   {
   }
 }

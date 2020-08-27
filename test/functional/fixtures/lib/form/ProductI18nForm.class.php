@@ -9,7 +9,7 @@
  */
 class ProductI18nForm extends BaseProductI18nForm
 {
-  public function configure()
+  public function configure(): void
   {
   }
 }

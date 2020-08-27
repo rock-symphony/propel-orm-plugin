@@ -10,7 +10,7 @@
  */
 class CategoryFormFilter extends BaseCategoryFormFilter
 {
-  public function configure()
+  public function configure(): void
   {
   }
 }

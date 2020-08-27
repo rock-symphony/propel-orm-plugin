@@ -9,7 +9,7 @@
  */
 class ToyFormFilter extends BaseToyFormFilter
 {
-  public function configure()
+  public function configure(): void
   {
   }
 }

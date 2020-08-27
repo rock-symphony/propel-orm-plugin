@@ -9,7 +9,7 @@
  */
 class ToyPropelForm extends BaseToyPropelForm
 {
-  public function configure()
+  public function configure(): void
   {
     $this->embedI18n(array('fr', 'en'));
   }

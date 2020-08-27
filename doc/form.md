@@ -15,7 +15,7 @@ Most of the time, the configuration of this widget and validator is already done
 ```php
 abstract class BaseArticleForm extends BaseFormPropel
 {
-  public function setup()
+  public function setup(): void
   {
     // ...
 
@@ -47,7 +47,7 @@ You can set the widget to execute additional query methods on the related Model 
 ```php
 class ContentForm extends BaseContentForm
 {
-  public function configure()
+  public function configure(): void
   {
     $this->widgetSchema['section'] = new sfWidgetFormPropelChoice(array(
       'model'         => 'Section',
@@ -63,7 +63,7 @@ Query methods can also accept array of parameters, for example to sort branch in
 ```php
 class ContentForm extends BaseContentForm
 {
-  public function configure()
+  public function configure(): void
   {
     $this->widgetSchema['section'] = new sfWidgetFormPropelChoice(array(
       'model'         => 'Section',
@@ -78,7 +78,7 @@ You can also enable the `query_method` option on an existing widget. For instanc
 ```php
 class ArticleForm extends BaseArticleForm
 {
-  public function configure()
+  public function configure(): void
   {
     $this->widgetSchema['author_id']->setOption('query_methods', array('active'));
   }
@@ -99,7 +99,7 @@ So if you display a selection of items using a query method, you can validate th
 ```php
 class ContentForm extends BaseContentForm
 {
- public function configure()
+ public function configure(): void
  {
    $this->widgetSchema['section']->setOption('query_methods', array('published'));
    $this->validatorSchema['section']->setOption('query_methods', array('published'));
@@ -113,7 +113,7 @@ Alternatively, build the query yourself in the form, and pass it to the widget i
 ```php
 class ArticleForm extends BaseArticleForm
 {
-  public function configure()
+  public function configure(): void
   {
     $query = ArticleQuery::create()->filterByIsActive(true);
     $this->widgetSchema['author_id']->setOption('criteria', $query);
@@ -157,7 +157,7 @@ In a blog application, two articles can not have the same slug; to ensure this c
 ```php
 class ArticleForm extends BaseArticleForm
 {
-  public function configure()
+  public function configure(): void
   {
     // ...
 
@@ -193,7 +193,7 @@ Here is an example for `created_at` and `updated_at` columns, that you may want 
 ```php
 class ArticleForm extends BaseArticleForm
 {
-  public function configure()
+  public function configure(): void
   {
     // ...
     $this->setWidget('created_at', new sfWidgetFormPlain());
@@ -238,7 +238,7 @@ Since one-to-many relationships return `PropelCollection` objects, the ability t
 ```php
 class ArticleForm extends BaseArticleForm
 {
-  public function configure()
+  public function configure(): void
   {
     $this->embedRelation('Book');
   }

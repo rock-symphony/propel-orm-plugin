@@ -9,7 +9,7 @@
  */
 class MoviePropelI18nForm extends BaseMoviePropelI18nForm
 {
-  public function configure()
+  public function configure(): void
   {
   }
 }

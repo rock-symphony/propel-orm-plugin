@@ -10,7 +10,7 @@
  */
 class ProductFormFilter extends BaseProductFormFilter
 {
-  public function configure()
+  public function configure(): void
   {
   }
 }

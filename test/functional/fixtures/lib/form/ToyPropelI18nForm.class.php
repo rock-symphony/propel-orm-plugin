@@ -9,7 +9,7 @@
  */
 class ToyPropelI18nForm extends BaseToyPropelI18nForm
 {
-  public function configure()
+  public function configure(): void
   {
   }
 }

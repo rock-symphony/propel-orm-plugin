@@ -9,7 +9,7 @@
  */
 class AttachmentForm extends BaseAttachmentForm
 {
-  public function configure()
+  public function configure(): void
   {
     $this->widgetSchema['file'] = new sfWidgetFormInputFile();
     $this->validatorSchema['file'] = new sfValidatorFile(array(

@@ -71,7 +71,7 @@ class sfFormPropelCollection extends sfForm
   /**
    * Configures the current form.
    */
-  public function configure()
+  public function configure(): void
   {
     $formClass = $this->getFormClass();
     $i = 1;
