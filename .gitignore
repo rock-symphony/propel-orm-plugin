@@ -6,3 +6,5 @@ test/functional/fixtures/lib/model/om/
 mockproject/
 junit.xml
 .svn
+composer.phar
+composer.lock

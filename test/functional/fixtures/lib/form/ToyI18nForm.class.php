@@ -9,7 +9,7 @@
  */
 class ToyI18nForm extends BaseToyI18nForm
 {
-  public function configure()
+  public function configure(): void
   {
   }
 }

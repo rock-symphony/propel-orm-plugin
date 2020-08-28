@@ -9,7 +9,7 @@
  */
 class ArticleForm extends BaseArticleForm
 {
-  public function configure()
+  public function configure(): void
   {
     if ($category = $this->getObject()->getCategory())
     {

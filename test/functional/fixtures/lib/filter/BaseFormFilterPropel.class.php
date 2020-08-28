@@ -10,7 +10,7 @@
  */
 abstract class BaseFormFilterPropel extends sfFormFilterPropel
 {
-  public function setup()
+  public function setup(): void
   {
   }
 }

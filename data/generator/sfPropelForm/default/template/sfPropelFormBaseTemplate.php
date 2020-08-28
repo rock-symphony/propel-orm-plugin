@@ -9,7 +9,7 @@
  */
 abstract class BaseFormPropel extends sfFormPropel
 {
-  public function setup()
+  public function setup(): void
   {
   }
 }

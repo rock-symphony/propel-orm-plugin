@@ -93,7 +93,7 @@ abstract class MockFilter extends sfFormFilterPropel {
 }
 class MockFilterMerged extends MockFilter
 {
-  public function configure()
+  public function configure(): void
   {
     $this->setValidators(array(
       'merged_filter'   => new sfValidatorPass(array('required' => false)),
@@ -112,7 +112,7 @@ class MockFilterMerged extends MockFilter
 }
 class MockFilterEmbedded extends MockFilter
 {
-  public function configure()
+  public function configure(): void
   {
     $this->setValidators(array(
       'embedded_filter'   => new sfValidatorPass(array('required' => false)),
@@ -133,7 +133,7 @@ class MockModelFilter extends MockFilter
 {
   public function getModelName() { return 'MockModel'; }
 
-  public function configure()
+  public function configure(): void
   {
     $this->setValidators(array(
       'my_filter'   => new sfValidatorPass(array('required' => false)),

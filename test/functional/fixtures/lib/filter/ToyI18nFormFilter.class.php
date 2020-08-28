@@ -9,7 +9,7 @@
  */
 class ToyI18nFormFilter extends BaseToyI18nFormFilter
 {
-  public function configure()
+  public function configure(): void
   {
   }
 }

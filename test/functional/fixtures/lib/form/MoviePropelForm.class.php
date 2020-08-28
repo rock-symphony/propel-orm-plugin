@@ -9,7 +9,7 @@
  */
 class MoviePropelForm extends BaseMoviePropelForm
 {
-  public function configure()
+  public function configure(): void
   {
     $this->embedI18n(array('en', 'fr'));
     $this->embedRelation('ToyPropel');

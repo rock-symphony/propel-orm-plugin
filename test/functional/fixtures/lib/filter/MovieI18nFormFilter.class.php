@@ -10,7 +10,7 @@
  */
 class MovieI18nFormFilter extends BaseMovieI18nFormFilter
 {
-  public function configure()
+  public function configure(): void
   {
   }
 }

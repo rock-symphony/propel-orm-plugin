@@ -9,7 +9,7 @@
  */
 abstract class Base<?php echo $this->table->getClassname() ?>FormFilter extends BaseFormFilterPropel
 {
-  public function setup()
+  public function setup(): void
   {
     $this->setWidgets(array(
 <?php foreach ($this->table->getColumns() as $column): ?>
