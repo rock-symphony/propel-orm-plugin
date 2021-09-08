@@ -144,30 +144,28 @@ class sfPropelMigrationManager
     /**
      * @return string[]
      */
-    public function getExecutedMigrationNamesForBatch($batch)
+    public function getLatestExecutedMigrationName()
     {
         if (!$connections = $this->getConnections()) {
             throw new Exception('You must define database connection settings in a buildtime-conf.xml file to use migrations');
         }
 
-        $migrationNames = [];
+        $migrationName = null;
 
         foreach ($connections as $name => $params) {
             $pdo = $this->getPdoConnection($name);
-            $sql = sprintf('SELECT migration FROM %s WHERE batch = %s', $this->getMigrationTable(), $batch);
+            $sql = sprintf('SELECT migration FROM %s ORDER BY id DESC LIMIT 1', $this->getMigrationTable());
 
             try {
                 $stmt = $pdo->prepare($sql);
                 $stmt->execute();
-                while ($migrationName = $stmt->fetchColumn()) {
-                    $migrationNames[] = $migrationName;
-                }
+                $migrationName = $stmt->fetchColumn();
             } catch (PDOException $e) {
                 $this->createMigrationTable($name);
             }
         }
 
-        return $migrationNames;
+        return $migrationName;
     }
 
     public function migrationTableExists($datasource)
@@ -192,16 +190,19 @@ class sfPropelMigrationManager
         $database->setPlatform($platform);
         $table = new Table($this->getMigrationTable());
         $database->addTable($table);
+        $table->setIdMethod('native');
+        // add "id" column
+        $column = new Column('id');
+        $column->getDomain()->copy($platform->getDomainForType('INTEGER'));
+        $column->setNotNull(true);
+        $column->setPrimaryKey(true);
+        $column->setAutoIncrement(true);
+        $table->addColumn($column);
         // add "migration" column
         $column = new Column('migration');
         $column->getDomain()->copy($platform->getDomainForType('VARCHAR'));
         $column->setNotNull(true);
-        $column->setPrimaryKey(true);
-        $table->addColumn($column);
-        // add "batch" column
-        $column = new Column('batch');
-        $column->getDomain()->copy($platform->getDomainForType('INTEGER'));
-        $column->setNotNull(true);
+        $column->setUnique(true);
         $table->addColumn($column);
         // insert the table into the database
         $statements = $platform->getAddTableDDL($table);
@@ -212,18 +213,16 @@ class sfPropelMigrationManager
         }
     }
 
-    public function addExecutedMigration($datasource, $migrationName, $batch)
+    public function addExecutedMigration($datasource, $migrationName)
     {
         $platform = $this->getPlatform($datasource);
         $pdo = $this->getPdoConnection($datasource);
-        $sql = sprintf('INSERT INTO %s (%s, %s) VALUES (?, ?)',
+        $sql = sprintf('INSERT INTO %s (%s) VALUES (?)',
             $this->getMigrationTable(),
             $platform->quoteIdentifier('migration'),
-            $platform->quoteIdentifier('batch')
         );
         $stmt = $pdo->prepare($sql);
         $stmt->bindParam(1, $migrationName, PDO::PARAM_STR);
-        $stmt->bindParam(2, $batch, PDO::PARAM_INT);
         $stmt->execute();
     }
 
@@ -266,35 +265,6 @@ class sfPropelMigrationManager
     public function getMissingMigrationNames()
     {
         return array_diff($this->getExistingMigrationNames(), $this->getExecutedMigrationNames());
-    }
-
-    /**
-     * @return int
-     */
-    public function getLatestBatch()
-    {
-        if (!$connections = $this->getConnections()) {
-            throw new Exception('You must define database connection settings in a buildtime-conf.xml file to use migrations');
-        }
-
-        $batch = 0;
-
-        foreach ($connections as $name => $params) {
-            $pdo = $this->getPdoConnection($name);
-            $sql = sprintf('SELECT MAX(batch) as latest_batch FROM %s', $this->getMigrationTable());
-
-            try {
-                $stmt = $pdo->prepare($sql);
-                $stmt->execute();
-                if ($datasourceMaxBatch = $stmt->fetchColumn()) {
-                    $batch = $datasourceMaxBatch > $batch ? $datasourceMaxBatch : $batch;
-                }
-            } catch (PDOException $e) {
-                $this->createMigrationTable($name);
-            }
-        }
-
-        return $batch;
     }
 
     public function hasPendingMigrations()

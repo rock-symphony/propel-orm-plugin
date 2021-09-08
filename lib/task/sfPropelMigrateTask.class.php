@@ -73,8 +73,6 @@ EOF;
             $this->logSection('propel', sprintf('%d migrations to execute', count($missingMigrations)));
         }
 
-        $batch = $manager->getLatestBatch() + 1;
-
         foreach ($missingMigrations as $migrationName)
         {
             $this->logSection('propel', sprintf(
@@ -133,7 +131,7 @@ EOF;
                     count($statements),
                     $datasource
                 ));
-                $manager->addExecutedMigration($datasource, $migrationName, $batch);
+                $manager->addExecutedMigration($datasource, $migrationName);
                 if ($options['verbose'])
                 {
                     $this->logSection('propel', sprintf('  Added %s to executed migrations for datasource "%s"', $migrationName, $datasource), null, 'COMMENT');

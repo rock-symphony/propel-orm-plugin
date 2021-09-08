@@ -60,79 +60,77 @@ EOF;
         $migrationDirectory = sfConfig::get('sf_root_dir') . DIRECTORY_SEPARATOR . $options['migration-dir'];
         $manager->setMigrationDir($migrationDirectory);
 
-        $latestExecutedMigrations = $manager->getExecutedMigrationNamesForBatch($manager->getLatestBatch());
-        if (empty($latestExecutedMigrations))
+        $migrationName = $manager->getLatestExecutedMigrationName();
+        if (empty($migrationName))
         {
             $this->logSection('propel', 'No migration were ever executed on this database - nothing to reverse.');
             return self::OK;
         }
         $this->logSection('propel', 'Executing migrations down');
 
-        foreach ($latestExecutedMigrations as $migrationName) {
-            $migration = $manager->getMigrationObject($migrationName);
-            if (false === $migration->preDown($manager)) {
-                $this->logSection('propel', 'preDown() returned false. Aborting migration.', null, 'ERROR');
+        $migration = $manager->getMigrationObject($migrationName);
+        if (false === $migration->preDown($manager)) {
+            $this->logSection('propel', 'preDown() returned false. Aborting migration.', null, 'ERROR');
+
+            return self::NOT_OK;
+        }
+
+        foreach ($migration->getDownSQL() as $datasource => $sql) {
+            $connection = $manager->getConnection($datasource);
+            if ($options['verbose']) {
+                $this->logSection('propel',
+                    sprintf('  Connecting to database "%s" using DSN "%s"', $datasource, $connection['dsn']), null,
+                    'COMMENT');
+            }
+            $pdo = $manager->getPdoConnection($datasource);
+            $res = 0;
+            $statements = PropelSQLParser::parseString($sql);
+            foreach ($statements as $statement) {
+                try {
+                    if ($options['verbose']) {
+                        $this->logSection('propel', sprintf('  Executing statement "%s"', $statement), null, 'COMMENT');
+                    }
+                    $stmt = $pdo->prepare($statement);
+                    $stmt->execute();
+                    $res++;
+                } catch (PDOException $e) {
+                    $this->logSection(sprintf('Failed to execute SQL "%s". Aborting migration.', $statement), null,
+                        'ERROR');
+
+                    return self::NOT_OK;
+                    // continue
+                }
+            }
+            if (! $res) {
+                $this->logSection('propel', sprintf(
+                    'Please review the code in "%s"',
+                    $manager->getMigrationDir() . DIRECTORY_SEPARATOR . $migrationName
+                ));
+                $this->logSection('propel', 'Migration aborted', null, 'ERROR');
 
                 return self::NOT_OK;
             }
+            $this->logSection('propel', sprintf(
+                '%d of %d SQL statements executed successfully on datasource "%s"',
+                $res,
+                count($statements),
+                $datasource
+            ));
 
-            foreach ($migration->getDownSQL() as $datasource => $sql) {
-                $connection = $manager->getConnection($datasource);
-                if ($options['verbose']) {
-                    $this->logSection('propel',
-                        sprintf('  Connecting to database "%s" using DSN "%s"', $datasource, $connection['dsn']), null,
-                        'COMMENT');
-                }
-                $pdo = $manager->getPdoConnection($datasource);
-                $res = 0;
-                $statements = PropelSQLParser::parseString($sql);
-                foreach ($statements as $statement) {
-                    try {
-                        if ($options['verbose']) {
-                            $this->logSection('propel', sprintf('  Executing statement "%s"', $statement), null, 'COMMENT');
-                        }
-                        $stmt = $pdo->prepare($statement);
-                        $stmt->execute();
-                        $res++;
-                    } catch (PDOException $e) {
-                        $this->logSection(sprintf('Failed to execute SQL "%s". Aborting migration.', $statement), null,
-                            'ERROR');
-
-                        return self::NOT_OK;
-                        // continue
-                    }
-                }
-                if (! $res) {
-                    $this->logSection('propel', sprintf(
-                        'Please review the code in "%s"',
-                        $manager->getMigrationDir() . DIRECTORY_SEPARATOR . $migrationName
-                    ));
-                    $this->logSection('propel', 'Migration aborted', null, 'ERROR');
-
-                    return self::NOT_OK;
-                }
-                $this->logSection('propel', sprintf(
-                    '%d of %d SQL statements executed successfully on datasource "%s"',
-                    $res,
-                    count($statements),
-                    $datasource
-                ));
-
-                $manager->removeExecutedMigration($datasource, $migrationName);
-                if ($options['verbose']) {
-                    $this->logSection(
-                        'propel',
-                        sprintf('  Removed %s from executed migrations for datasource "%s"', $migrationName, $datasource),
-                        null,
-                        'COMMENT'
-                    );
-                }
+            $manager->removeExecutedMigration($datasource, $migrationName);
+            if ($options['verbose']) {
+                $this->logSection(
+                    'propel',
+                    sprintf('  Removed %s from executed migrations for datasource "%s"', $migrationName, $datasource),
+                    null,
+                    'COMMENT'
+                );
             }
-
-            $migration->postDown($manager);
         }
 
-        $this->logSection('propel', sprintf('Reverse migration complete. %d migrations were rolled back.', count($latestExecutedMigrations)));
+        $migration->postDown($manager);
+
+        $this->logSection('propel', sprintf('Reverse migration complete. %s is rolled back.', $migrationName));
 
         return self::OK;
     }
