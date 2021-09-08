@@ -27,7 +27,7 @@ class sfPropelDiffTask extends sfPropelBaseTask
       new sfCommandOption('application', null, sfCommandOption::PARAMETER_OPTIONAL, 'The application name', true),
       new sfCommandOption('env', null, sfCommandOption::PARAMETER_REQUIRED, 'The environment', 'cli'),
       new sfCommandOption('migration-dir', null, sfCommandOption::PARAMETER_OPTIONAL, 'The migrations subdirectory', 'lib/model/migration'),
-      new sfCommandOption('migration-table', null, sfCommandOption::PARAMETER_OPTIONAL, 'The name of the migration table', 'propel_migration'),
+      new sfCommandOption('migration-table', null, sfCommandOption::PARAMETER_OPTIONAL, 'The name of the migration table', 'migration'),
       new sfCommandOption('editor-cmd', null, sfCommandOption::PARAMETER_OPTIONAL, 'A command used to edit the migration class'),
       new sfCommandOption('ask-confirmation', null, sfCommandOption::PARAMETER_NONE, 'Ask for confirmation'),
       new sfCommandOption('verbose', null, sfCommandOption::PARAMETER_NONE, 'Enables verbose output'),
