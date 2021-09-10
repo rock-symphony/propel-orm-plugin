@@ -139,7 +139,7 @@ class sfPropelMigrationManager
             }
         }
 
-        return $migrationNames;
+        return array_unique($migrationNames);
     }
 
     /**
@@ -152,16 +152,22 @@ class sfPropelMigrationManager
         }
 
         $migrationName = null;
+        $maxId = -1;
 
         foreach ($connections as $name => $params) {
             $pdo = $this->getPdoConnection($name);
-            $sql = sprintf('SELECT migration FROM %s ORDER BY id DESC LIMIT 1', $this->getMigrationTable());
+            $sql = sprintf('SELECT id, migration FROM %s ORDER BY id DESC LIMIT 1', $this->getMigrationTable());
 
             try {
                 $stmt = $pdo->prepare($sql);
                 $stmt->execute();
 
-                $migrationName = $stmt->fetchColumn();
+                $record = $stmt->fetch(PDO::FETCH_ASSOC);
+
+                if (!empty($record) && intval($record['id']) > $maxId) {
+                    $maxId = intval($record['id']);
+                    $migrationName = $record['migration'];
+                }
             } catch (PDOException $e) {
                 $this->createMigrationTable($name);
             }
@@ -365,7 +371,7 @@ EOP;
         return sprintf('%s.php', self::generateMigrationClassName($timestamp));
     }
 
-    public static function getUser()
+    public function getUser()
     {
         if (function_exists('posix_getuid')) {
             $currentUser = posix_getpwuid(posix_getuid());
