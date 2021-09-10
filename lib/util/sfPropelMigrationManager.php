@@ -19,7 +19,7 @@ class sfPropelMigrationManager
 {
     protected $connections;
     protected $pdoConnections = array();
-    protected $migrationTable = 'migration';
+    protected $migrationTable = 'propel_migration';
     protected $migrationDir;
 
     /**
