@@ -61,6 +61,7 @@ EOF;
         $manager->setMigrationDir($migrationDirectory);
 
         $migrationName = $manager->getLatestExecutedMigrationName();
+
         if (empty($migrationName))
         {
             $this->logSection('propel', 'No migration were ever executed on this database - nothing to reverse.');
@@ -101,7 +102,7 @@ EOF;
                     // continue
                 }
             }
-            if (! $res) {
+            if (!$res) {
                 $this->logSection('propel', sprintf(
                     'Please review the code in "%s"',
                     $manager->getMigrationDir() . DIRECTORY_SEPARATOR . $migrationName

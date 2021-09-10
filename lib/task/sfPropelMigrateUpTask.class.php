@@ -76,6 +76,7 @@ EOF;
         ));
 
         $migration = $manager->getMigrationObject($migrationName);
+
         if (false === $migration->preUp($manager))
         {
             $this->logSection('propel', 'preUp() returned false. Aborting migration.', null, 'ERROR');
@@ -108,7 +109,6 @@ EOF;
                 {
                     $this->logSection(sprintf('Failed to execute SQL "%s". Aborting migration.', $statement), null, 'ERROR');
                     return self::NOT_OK;
-                    // continue
                 }
             }
             if (!$res)
@@ -127,7 +127,9 @@ EOF;
                 count($statements),
                 $datasource
             ));
+
             $manager->addExecutedMigration($datasource, $migrationName);
+
             if ($options['verbose'])
             {
                 $this->logSection('propel', sprintf('  Added %s to executed migrations for datasource "%s"', $migrationName, $datasource), null, 'COMMENT');
@@ -136,11 +138,13 @@ EOF;
 
         $migration->postUp($manager);
 
-        if (count($missingMigrations))
+        $countMissingMigrations = count($missingMigrations);
+
+        if ($countMissingMigrations)
         {
             $this->logSection('propel', sprintf(
                 'Migration complete. %d migrations left to execute.',
-                count($missingMigrations)
+                $countMissingMigrations
             ));
         }
         else

@@ -77,8 +77,10 @@ EOF;
         $this->logSection('propel', 'Listing Migration files...');
 
         $migrationNames = $manager->getExistingMigrationNames();
-        $missingMigrations = $manager->getMissingMigrationNames();
         $executedMigrations = $manager->getExecutedMigrationNames();
+        $missingMigrations = $manager->getMissingMigrationNames();
+
+        $countMissingMigrations = count($missingMigrations);
 
         if ($migrationNames)
         {
@@ -86,10 +88,9 @@ EOF;
             {
                 $this->logSection('propel', sprintf('  %d valid migration classes found in "%s"', count($migrationNames), $options['migration-dir']), null, 'COMMENT');
             }
-            if ($missingMigrations)
+            if ($countMissingMigrations)
             {
-                $countMissingMigrations = count($missingMigrations);
-                if ($countMissingMigrations == 1)
+                if ($countMissingMigrations === 1)
                 {
                     $this->logSection('propel', '1 migration needs to be executed:');
                 }
@@ -100,13 +101,13 @@ EOF;
             }
             foreach ($migrationNames as $migrationName)
             {
-                if (in_array($migrationName, $executedMigrations) && $options['verbose'])
-                {
-                    $this->logSection('propel', sprintf('  %s (executed)', $migrationName), null, 'COMMENT');
-                }
-                elseif (! in_array($migrationName, $executedMigrations))
+                if (!in_array($migrationName, $executedMigrations))
                 {
                     $this->logSection('propel', sprintf('    %s', $migrationName));
+                }
+                elseif ($options['verbose'])
+                {
+                    $this->logSection('propel', sprintf('  %s (executed)', $migrationName), null, 'COMMENT');
                 }
             }
         }
@@ -117,13 +118,15 @@ EOF;
             return false;
         }
 
-        $nbNotYetExecutedMigrations = count($missingMigrations);
-        if (!$nbNotYetExecutedMigrations)
+        if (!$countMissingMigrations)
         {
             $this->logSection('propel', 'All migration files were already executed - Nothing to migrate.');
             return false;
         }
-        $this->logSection('propel', sprintf('Call the "propel:migrate" task to execute %s', $countMissingMigrations == 1 ? 'it' : 'them'
+
+        $this->logSection('propel', sprintf(
+            'Call the "propel:migrate" task to execute %s',
+            $countMissingMigrations === 1 ? 'it' : 'them'
         ));
     }
 
