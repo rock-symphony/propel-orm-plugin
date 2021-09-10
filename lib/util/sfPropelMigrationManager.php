@@ -113,7 +113,7 @@ class sfPropelMigrationManager
     }
 
     /**
-     * @return array[]
+     * @return string[]
      */
     public function getExecutedMigrationNames()
     {
@@ -130,6 +130,7 @@ class sfPropelMigrationManager
             try {
                 $stmt = $pdo->prepare($sql);
                 $stmt->execute();
+
                 while ($migrationName = $stmt->fetchColumn()) {
                     $migrationNames[] = $migrationName;
                 }
@@ -142,7 +143,7 @@ class sfPropelMigrationManager
     }
 
     /**
-     * @return string[]
+     * @return string
      */
     public function getLatestExecutedMigrationName()
     {
@@ -159,6 +160,7 @@ class sfPropelMigrationManager
             try {
                 $stmt = $pdo->prepare($sql);
                 $stmt->execute();
+
                 $migrationName = $stmt->fetchColumn();
             } catch (PDOException $e) {
                 $this->createMigrationTable($name);
@@ -168,46 +170,53 @@ class sfPropelMigrationManager
         return $migrationName;
     }
 
+    /**
+     * @return bool
+     */
     public function migrationTableExists($datasource)
     {
         $pdo = $this->getPdoConnection($datasource);
         $sql = sprintf('SELECT migration FROM %s', $this->getMigrationTable());
+
         $stmt = $pdo->prepare($sql);
+
         try {
             $stmt->execute();
-
-            return true;
         } catch (PDOException $e) {
             return false;
         }
+
+        return true;
     }
 
     public function createMigrationTable($datasource)
     {
         $platform = $this->getPlatform($datasource);
-        // modelize the table
+
         $database = new Database($datasource);
         $database->setPlatform($platform);
+
         $table = new Table($this->getMigrationTable());
-        $database->addTable($table);
         $table->setIdMethod('native');
-        // add "id" column
+        $database->addTable($table);
+
         $column = new Column('id');
         $column->getDomain()->copy($platform->getDomainForType('INTEGER'));
         $column->setNotNull(true);
         $column->setPrimaryKey(true);
         $column->setAutoIncrement(true);
         $table->addColumn($column);
-        // add "migration" column
+
         $column = new Column('migration');
         $column->getDomain()->copy($platform->getDomainForType('VARCHAR'));
         $column->setNotNull(true);
         $column->setUnique(true);
         $table->addColumn($column);
-        // insert the table into the database
+
         $statements = $platform->getAddTableDDL($table);
         $pdo = $this->getPdoConnection($datasource);
         $res = PropelSQLParser::executeString($statements, $pdo);
+
         if (!$res) {
             throw new Exception(sprintf('Unable to create migration table in datasource "%s"', $datasource));
         }
@@ -245,11 +254,11 @@ class sfPropelMigrationManager
     public function getExistingMigrationNames()
     {
         $path = $this->getMigrationDir();
+
         $migrationNames = array();
 
         if (is_dir($path)) {
-            $files = scandir($path);
-            foreach ($files as $file) {
+            foreach (scandir($path) as $file) {
                 if (preg_match('/^PropelMigration_(\d+)\.php$/', $file, $matches)) {
                     $migrationNames[] = trim($file, '.php');
                 }
@@ -267,11 +276,9 @@ class sfPropelMigrationManager
         return array_diff($this->getExistingMigrationNames(), $this->getExecutedMigrationNames());
     }
 
-    public function hasPendingMigrations()
-    {
-        return ! empty($this->getMissingMigrationNames());
-    }
-
+    /**
+     * @return string
+     */
     public static function generateMigrationClassName($timestamp)
     {
         return sprintf('PropelMigration_%d', $timestamp);
@@ -353,7 +360,7 @@ EOP;
         return $migrationClassBody;
     }
 
-    public static function generateMigrationFileName($timestamp)
+    public function generateMigrationFileName($timestamp)
     {
         return sprintf('%s.php', self::generateMigrationClassName($timestamp));
     }

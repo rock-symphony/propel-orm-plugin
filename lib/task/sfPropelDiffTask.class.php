@@ -124,7 +124,7 @@ EOF;
     }
 
     $this->logSection('propel', 'Comparing databases and schemas...');
-    $manager = new PropelMigrationManager();
+    $manager = new sfPropelMigrationManager();
     $manager->setConnections($connections);
     $migrationsUp = array();
     $migrationsDown = array();
@@ -166,7 +166,7 @@ EOF;
 
     $timestamp = time();
     $migrationDirectory = sfConfig::get('sf_root_dir') . DIRECTORY_SEPARATOR . $options['migration-dir'];
-    $migrationFileName = $manager->getMigrationFileName($timestamp);
+    $migrationFileName = $manager->generateMigrationFileName($timestamp);
     $migrationFilePath = $migrationDirectory . DIRECTORY_SEPARATOR . $migrationFileName;
     if (
       $options['ask-confirmation']
@@ -180,7 +180,7 @@ EOF;
       return 1;
     }
     $this->getFilesystem()->mkdirs($migrationDirectory);
-    $migrationClassBody = $manager->getMigrationClassBody($migrationsUp, $migrationsDown, $timestamp);
+    $migrationClassBody = $manager->generateMigrationClassBody($migrationsUp, $migrationsDown, $timestamp);
     file_put_contents($migrationFilePath, $migrationClassBody);
     $this->logSection('propel', sprintf('"%s" file successfully created in %s', $migrationFileName, $migrationDirectory));
 
