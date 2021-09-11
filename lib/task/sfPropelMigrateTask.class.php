@@ -132,12 +132,14 @@ EOF;
                     $datasource
                 ));
 
-                $manager->addExecutedMigration($datasource, $migrationName);
-
                 if ($options['verbose'])
                 {
                     $this->logSection('propel', sprintf('  Added %s to executed migrations for datasource "%s"', $migrationName, $datasource), null, 'COMMENT');
                 }
+            }
+
+            foreach ($migration->getUpSQL() as $datasource => $sql) {
+                $manager->addExecutedMigration($datasource, $migrationName);
             }
 
             $migration->postUp($manager);
