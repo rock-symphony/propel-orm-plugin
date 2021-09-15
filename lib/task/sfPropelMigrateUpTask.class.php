@@ -56,9 +56,8 @@ EOF;
         $connections = $this->getConnections($databaseManager);
         $manager = new sfPropelMigrationManager();
         $manager->setConnections($connections);
+        $manager->setMigrationDir(sfConfig::get('sf_root_dir') . DIRECTORY_SEPARATOR . $options['migration-dir']);
         $manager->setMigrationTable($options['migration-table']);
-        $migrationDirectory = sfConfig::get('sf_root_dir') . DIRECTORY_SEPARATOR . $options['migration-dir'];
-        $manager->setMigrationDir($migrationDirectory);
 
         $missingMigrations = $manager->getMissingMigrationNames();
 
@@ -127,13 +126,13 @@ EOF;
                 count($statements),
                 $datasource
             ));
+        }
 
-            $manager->addExecutedMigration($datasource, $migrationName);
+        $manager->addExecutedMigration($migrationName);
 
-            if ($options['verbose'])
-            {
-                $this->logSection('propel', sprintf('  Added %s to executed migrations for datasource "%s"', $migrationName, $datasource), null, 'COMMENT');
-            }
+        if ($options['verbose'])
+        {
+            $this->logSection('propel', sprintf('  Added %s to executed migrations', $migrationName), null, 'COMMENT');
         }
 
         $migration->postUp($manager);

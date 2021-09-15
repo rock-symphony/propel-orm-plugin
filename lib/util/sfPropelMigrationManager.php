@@ -21,6 +21,12 @@ class sfPropelMigrationManager
     protected $pdoConnections = array();
     protected $migrationTable = 'propel_migration';
     protected $migrationDir;
+    protected $migrationDatabase = 'default';
+
+    public function __construct()
+    {
+        $this->migrationDatabase = sfConfig::get('sf_migration_database');
+    }
 
     /**
      * Set the database connection settings
@@ -113,30 +119,46 @@ class sfPropelMigrationManager
     }
 
     /**
+     * @return string
+     */
+    public function getMigrationDatabase(): string
+    {
+        return $this->migrationDatabase;
+    }
+
+    /**
+     * @param string $migrationDatabase
+     */
+    public function setMigrationDatabase(string $migrationDatabase): void
+    {
+        $this->migrationDatabase = $migrationDatabase;
+    }
+
+    /**
      * @return string[]
      */
     public function getExecutedMigrationNames()
     {
-        if (!$connections = $this->getConnections()) {
-            throw new Exception('You must define database connection settings in a buildtime-conf.xml file to use migrations');
+        $connections = $this->getConnections();
+
+        if (!isset($connections[$this->migrationDatabase])) {
+            throw new Exception('Provided migration database does not exist');
         }
 
         $migrationNames = [];
 
-        foreach ($connections as $name => $params) {
-            $pdo = $this->getPdoConnection($name);
-            $sql = sprintf('SELECT migration FROM %s', $this->getMigrationTable());
+        $pdo = $this->getPdoConnection($this->migrationDatabase);
+        $sql = sprintf('SELECT migration FROM %s', $this->getMigrationTable());
 
-            try {
-                $stmt = $pdo->prepare($sql);
-                $stmt->execute();
+        try {
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute();
 
-                while ($migrationName = $stmt->fetchColumn()) {
-                    $migrationNames[] = $migrationName;
-                }
-            } catch (PDOException $e) {
-                $this->createMigrationTable($name);
+            while ($migrationName = $stmt->fetchColumn()) {
+                $migrationNames[] = $migrationName;
             }
+        } catch (PDOException $e) {
+            $this->createMigrationTable();
         }
 
         return array_unique($migrationNames);
@@ -147,30 +169,24 @@ class sfPropelMigrationManager
      */
     public function getLatestExecutedMigrationName()
     {
-        if (!$connections = $this->getConnections()) {
-            throw new Exception('You must define database connection settings in a buildtime-conf.xml file to use migrations');
+        $connections = $this->getConnections();
+
+        if (!isset($connections[$this->migrationDatabase])) {
+            throw new Exception('Provided migration database does not exist');
         }
 
         $migrationName = null;
-        $maxId = -1;
 
-        foreach ($connections as $name => $params) {
-            $pdo = $this->getPdoConnection($name);
-            $sql = sprintf('SELECT id, migration FROM %s ORDER BY id DESC LIMIT 1', $this->getMigrationTable());
+        $pdo = $this->getPdoConnection($this->migrationDatabase);
+        $sql = sprintf('SELECT migration FROM %s ORDER BY id DESC LIMIT 1', $this->getMigrationTable());
 
-            try {
-                $stmt = $pdo->prepare($sql);
-                $stmt->execute();
+        try {
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute();
 
-                $record = $stmt->fetch(PDO::FETCH_ASSOC);
-
-                if (!empty($record) && intval($record['id']) > $maxId) {
-                    $maxId = intval($record['id']);
-                    $migrationName = $record['migration'];
-                }
-            } catch (PDOException $e) {
-                $this->createMigrationTable($name);
-            }
+            $migrationName = $stmt->fetchColumn();
+        } catch (PDOException $e) {
+            $this->createMigrationTable();
         }
 
         return $migrationName;
@@ -179,9 +195,9 @@ class sfPropelMigrationManager
     /**
      * @return bool
      */
-    public function migrationTableExists($datasource)
+    public function migrationTableExists()
     {
-        $pdo = $this->getPdoConnection($datasource);
+        $pdo = $this->getPdoConnection($this->migrationDatabase);
         $sql = sprintf('SELECT migration FROM %s', $this->getMigrationTable());
 
         $stmt = $pdo->prepare($sql);
@@ -195,11 +211,17 @@ class sfPropelMigrationManager
         return true;
     }
 
-    public function createMigrationTable($datasource)
+    public function createMigrationTable()
     {
-        $platform = $this->getPlatform($datasource);
+        $connections = $this->getConnections();
 
-        $database = new Database($datasource);
+        if (!isset($connections[$this->migrationDatabase])) {
+            throw new Exception('Provided migration database does not exist');
+        }
+
+        $platform = $this->getPlatform($this->migrationDatabase);
+
+        $database = new Database($this->migrationDatabase);
         $database->setPlatform($platform);
 
         $table = new Table($this->getMigrationTable());
@@ -220,18 +242,18 @@ class sfPropelMigrationManager
         $table->addColumn($column);
 
         $statements = $platform->getAddTableDDL($table);
-        $pdo = $this->getPdoConnection($datasource);
+        $pdo = $this->getPdoConnection($this->migrationDatabase);
         $res = PropelSQLParser::executeString($statements, $pdo);
 
         if (!$res) {
-            throw new Exception(sprintf('Unable to create migration table in datasource "%s"', $datasource));
+            throw new Exception(sprintf('Unable to create migration table in datasource "%s"', $this->migrationDatabase));
         }
     }
 
-    public function addExecutedMigration($datasource, $migrationName)
+    public function addExecutedMigration($migrationName)
     {
-        $platform = $this->getPlatform($datasource);
-        $pdo = $this->getPdoConnection($datasource);
+        $platform = $this->getPlatform($this->migrationDatabase);
+        $pdo = $this->getPdoConnection($this->migrationDatabase);
         $sql = sprintf('INSERT INTO %s (%s) VALUES (?)',
             $this->getMigrationTable(),
             $platform->quoteIdentifier('migration'),
@@ -241,10 +263,10 @@ class sfPropelMigrationManager
         $stmt->execute();
     }
 
-    public function removeExecutedMigration($datasource, $migrationName)
+    public function removeExecutedMigration($migrationName)
     {
-        $platform = $this->getPlatform($datasource);
-        $pdo = $this->getPdoConnection($datasource);
+        $platform = $this->getPlatform($this->migrationDatabase);
+        $pdo = $this->getPdoConnection($this->migrationDatabase);
         $sql = sprintf('DELETE FROM %s WHERE %s = ?',
             $this->getMigrationTable(),
             $platform->quoteIdentifier('migration')

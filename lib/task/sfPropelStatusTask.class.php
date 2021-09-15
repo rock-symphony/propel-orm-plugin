@@ -53,25 +53,25 @@ EOF;
         $connections = $this->getConnections($databaseManager);
         $manager = new sfPropelMigrationManager();
         $manager->setConnections($connections);
+        $manager->setMigrationDir(sfConfig::get('sf_root_dir') . DIRECTORY_SEPARATOR . $options['migration-dir']);
         $manager->setMigrationTable($options['migration-table']);
-        $migrationDirectory = sfConfig::get('sf_root_dir') . DIRECTORY_SEPARATOR . $options['migration-dir'];
-        $manager->setMigrationDir($migrationDirectory);
 
         $this->logSection('propel', 'Checking Database Versions...');
-        foreach ($connections as $name => $params)
+
+        $params = $this->getConnection($databaseManager, $manager->getMigrationDatabase());
+
+        if ($options['verbose'])
+        {
+            $this->logSection('propel', sprintf('  Connecting to database "%s" using DSN "%s"', $manager->getMigrationDatabase(), $params['dsn']), null, 'COMMENT');
+        }
+
+        if (!$manager->migrationTableExists())
         {
             if ($options['verbose'])
             {
-                $this->logSection('propel', sprintf('  Connecting to database "%s" using DSN "%s"', $name, $params['dsn']), null, 'COMMENT');
+                $this->logSection('propel', sprintf('  Migration table does not exist in datasource "%s"; creating it.', $manager->getMigrationDatabase()), null, 'COMMENT');
             }
-            if (!$manager->migrationTableExists($name))
-            {
-                if ($options['verbose'])
-                {
-                    $this->logSection('propel', sprintf('  Migration table does not exist in datasource "%s"; creating it.', $name), null, 'COMMENT');
-                }
-                $manager->createMigrationTable($name);
-            }
+            $manager->createMigrationTable();
         }
 
         $this->logSection('propel', 'Listing Migration files...');
