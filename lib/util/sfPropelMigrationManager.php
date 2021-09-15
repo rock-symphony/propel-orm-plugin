@@ -21,7 +21,7 @@ class sfPropelMigrationManager
   protected $pdoConnections = array();
   protected $migrationTable = 'propel_migration';
   protected $migrationDir;
-  protected $migrationDatabase = 'default';
+  protected $migrationDatabase;
 
   public function __construct()
   {
