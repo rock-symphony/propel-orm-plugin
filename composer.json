@@ -9,11 +9,17 @@
         "php": ">=7.4",
         "composer/installers": "*",
         "rock-symphony/propel-orm": "^2.0",
-        "rock-symphony/rock-symphony": ">=9.0"
+        "rock-symphony/rock-symphony": ">=9.0",
+        "psr/log": "~1.0 || ~2.0 || ~3.0"
     },
     "extra": {
         "branch-alias": {
             "dev-master": "1.5-dev"
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "composer/installers": true
         }
     }
 }
