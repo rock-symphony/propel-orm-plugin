@@ -5,6 +5,15 @@
  */
 class propelOrmPluginConfiguration extends sfPluginConfiguration
 {
+  private LoggerInterface $logger;
+
+  public function __construct(LoggerInterface $logger, sfProjectConfiguration $configuration, $rootDir = null, $name = null)
+  {
+    parent::__construct($configuration, $rootDir, $name);
+
+    $this->logger = $logger;
+  }
+
   /**
    * @see sfPluginConfiguration
    */
@@ -27,7 +36,7 @@ class propelOrmPluginConfiguration extends sfPluginConfiguration
     {
       if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))
       {
-        Propel::setLogger(new sfPropelLogger($this->dispatcher));
+        Propel::setLogger($this->logger);
       }
 
       $propelConfiguration = new PropelConfiguration();
