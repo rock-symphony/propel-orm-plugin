@@ -6,7 +6,7 @@
     "keywords": ["symfony", "propel", "orm", "active record", "mapping", "database", "persistence"],
     "homepage": "http://www.propelorm.org/",
     "require": {
-        "php": ">=7.4",
+        "php": "^7.4|^8.0",
         "composer/installers": "*",
         "rock-symphony/propel-orm": "^2.0",
         "rock-symphony/rock-symphony": ">=9.0",
