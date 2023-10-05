@@ -1,5 +1,7 @@
 <?php
 
+use Psr\Log\LoggerInterface;
+
 /**
  * PropelOrmPlugin configuration.
  */
@@ -27,7 +29,7 @@ class propelOrmPluginConfiguration extends sfPluginConfiguration
     {
       if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))
       {
-        Propel::setLogger(new sfPropelLogger($this->dispatcher));
+        Propel::setLogger(Service::get(LoggerInterface::class));
       }
 
       $propelConfiguration = new PropelConfiguration();

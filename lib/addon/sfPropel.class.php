@@ -75,22 +75,6 @@ class sfPropel
   }
 
   /**
-   * @deprecated Use Propel::importClass() instead
-   */
-  static public function import($path)
-  {
-    return Propel::importClass($path);
-  }
-
-  /**
-   * @deprecated Use Propel::importClass() instead
-   */
-  static public function importClass($path)
-  {
-    return Propel::importClass($path);
-  }
-
-  /**
    * Clears all instance pools.
    *
    * @deprecated Moved to {@link sfPropelPluginConfiguration}
